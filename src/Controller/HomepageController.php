@@ -2,12 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Poppodium;
+use App\Entity\Artiest;
+use App\Entity\Optreden;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+
 
 #[Route('/')]
 class HomepageController extends AbstractController
@@ -69,5 +75,65 @@ class HomepageController extends AbstractController
         $params = $request->get('input');
         dd($params);
     }
-    
 }
+
+
+
+    /**
+        * @method Poppodium|null find($id, $lockMode = null, $lockVersion = null)
+        * @method Poppodium|null findOneBy(array $criteria, array $orderBy = null)
+        * @method Poppodium[]    findAll()
+        * @method Poppodium[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    */
+
+class PoppodiumRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Poppodium::class);
+    }
+ 
+    // /**
+    //  * @return Poppodium[] Returns an array of Poppodium objects
+    //  */
+    
+    public function findByExampleField($value) {
+        return $this->createQueryBuilder('p')
+            //->andWhere('p.exampleField = :val')
+            //->setParameter('val', $value)
+            //->orderBy('p.id', 'ASC')
+            //->setMaxResults(10)
+            //->getQuery()
+            //->getResult()
+        ;
+    }
+    
+    public function findOneBySomeField($value): ?Poppodium {
+        return $this->createQueryBuilder('p')
+            //->andWhere('p.exampleField = :val')
+            //->setParameter('val', $value)
+            //->getQuery()
+            //->getOneOrNullResult()
+        ;
+    }
+
+}
+
+class ArtiestRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Artiest::class);
+    }
+}
+
+class OptredenRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Optreden::class);
+    }
+}
+ 
+    
+
