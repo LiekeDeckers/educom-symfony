@@ -6,16 +6,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Entity\Optreden;
+use App\Service\OptredenService;
 
 #[Route('/optreden')]
 class OptredenController extends AbstractController
 {
+    private $os;            // os = optredenService
+
+    public function __construct(OptredenService $os) {
+        $this->os = $os;
+    }
+
  
     #[Route('/save', name: 'optreden_save')]
     public function saveOptreden() {
 
-        $rep = $this->getDoctrine()->getRepository(Optreden::class);
         /// Ook hier weer een kleine simulatie van een "POST" request
         $optreden = [
             "poppodium_id" => 1,
@@ -31,7 +36,7 @@ class OptredenController extends AbstractController
             "afbeelding_url" => "https://melkweg.nl/optreden/plaatje.jpg"
         ];
 
-        $result = $rep->saveOptreden($optreden);
+        $result = $this->os->saveOptreden($optreden);
         dd($result);
 
     }
