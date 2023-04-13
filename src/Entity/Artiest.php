@@ -28,13 +28,13 @@ class Artiest
     #[ORM\Column(length: 100)]
     private ?string $website = null;
 
-    #[ORM\ManyToOne(inversedBy: 'artiest')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Optreden $artiest = null;
+    #[ORM\OneToMany(mappedBy: 'artiest', targetEntity: Optreden::class)]
+    private $optredens;
 
-    #[ORM\ManyToOne(inversedBy: 'voorprogramma')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Optreden $voorprogramma = null;
+    public function __construct()
+    {
+        $this->optredens = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -101,26 +101,32 @@ class Artiest
         return $this;
     }
 
-    public function getArtiest(): ?Optreden
+    /**
+     * @return Collection<int, Optreden>
+     */
+    public function getOptredens(): Collection
     {
-        return $this->artiest;
+        return $this->optredens;
     }
 
-    public function setArtiest(?Optreden $artiest): self
+    public function addOptreden(Optreden $optreden): self
     {
-        $this->artiest = $artiest;
+        if (!$this->optredens->contains($optreden)) {
+            $this->optredens[] = $optreden;
+            $optreden->setArtiest($this);
+        }
 
         return $this;
     }
 
-    public function getVoorprogramma(): ?Optreden
+    public function removeOptreden(Optreden $optreden): self
     {
-        return $this->voorprogramma;
-    }
-
-    public function setVoorprogramma(?Optreden $voorprogramma): self
-    {
-        $this->voorprogramma = $voorprogramma;
+        if ($this->optredens->removeElement($optreden)) {
+            // set the owning side to null (unless already changed)
+            if ($optreden->getArtiest() === $this) {
+                $optreden->setArtiest(null);
+            }
+        }
 
         return $this;
     }

@@ -39,6 +39,11 @@ class OptredenRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllOptredens() {
+        $optredens = $this->findAll();
+        return $optredens;
+    }
+
 //    /**
 //     * @return Optreden[] Returns an array of Optreden objects
 //     */

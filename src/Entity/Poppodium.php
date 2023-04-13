@@ -16,7 +16,7 @@ class Poppodium
     private ?int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $naam = null;
+    private ?string $naam;
 
     #[ORM\Column(length: 50)]
     private ?string $adres = null;
@@ -30,7 +30,7 @@ class Poppodium
     #[ORM\Column(length: 50)]
     private ?string $telefoonnummer = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 100)]
     private ?string $email = null;
 
     #[ORM\Column(length: 100)]
@@ -43,11 +43,11 @@ class Poppodium
     private ?string $afbeelding_url = null;
 
     #[ORM\OneToMany(mappedBy: 'poppodium', targetEntity: Optreden::class)]
-    private Collection $podium;
+    private Collection $optredens;
 
     public function __construct()
     {
-        $this->podium = new ArrayCollection();
+        $this->optredens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -166,27 +166,27 @@ class Poppodium
     /**
      * @return Collection<int, Optreden>
      */
-    public function getPodium(): Collection
+    public function getOptredens(): Collection
     {
-        return $this->podium;
+        return $this->optredens;
     }
 
-    public function addPodium(Optreden $podium): self
+    public function addOptreden(Optreden $optreden): self
     {
-        if (!$this->podium->contains($podium)) {
-            $this->podium->add($podium);
-            $podium->setPoppodium($this);
+        if (!$this->optredens->contains($optreden)) {
+            $this->optredens->add($optreden);
+            $optreden->setPoppodium($this);
         }
 
         return $this;
     }
 
-    public function removePodium(Optreden $podium): self
+    public function removeOptreden(Optreden $optreden): self
     {
-        if ($this->podium->removeElement($podium)) {
+        if ($this->optredens->removeElement($optreden)) {
             // set the owning side to null (unless already changed)
-            if ($podium->getPoppodium() === $this) {
-                $podium->setPoppodium(null);
+            if ($optreden->getPoppodium() === $this) {
+                $optreden->setPoppodium(null);
             }
         }
 

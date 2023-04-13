@@ -16,15 +16,17 @@ class Optreden
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\ManyToOne(inversedBy: 'podium')]
+    #[ORM\ManyToOne(inversedBy: 'optredens')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Poppodium $poppodium = null;
+    private ?Poppodium $poppodium;
 
-    #[ORM\OneToMany(mappedBy: 'artiest', targetEntity: artiest::class)]
-    private Collection $artiest;
+    #[ORM\ManyToOne(targetEntity: Artiest::class, inversedBy: 'optredens')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $artiest;
 
-    #[ORM\OneToMany(mappedBy: 'voorprogramma', targetEntity: artiest::class)]
-    private Collection $voorprogramma;
+    #[ORM\ManyToOne(targetEntity: Artiest::class, inversedBy: 'optredens')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $voorprogramma;
 
     #[ORM\Column(length: 100)]
     private ?string $omschrijving = null;
@@ -64,62 +66,26 @@ class Optreden
         return $this;
     }
 
-    /**
-     * @return Collection<int, artiest>
-     */
-    public function getArtiest(): Collection
+    public function getArtiest(): ?Artiest
     {
         return $this->artiest;
     }
 
-    public function addArtiest(artiest $artiest): self
+    public function setArtiest(?Artiest $artiest): self
     {
-        if (!$this->artiest->contains($artiest)) {
-            $this->artiest->add($artiest);
-            $artiest->setArtiest($this);
-        }
+        $this->artiest = $artiest;
 
         return $this;
     }
 
-    public function removeArtiest(artiest $artiest): self
-    {
-        if ($this->artiest->removeElement($artiest)) {
-            // set the owning side to null (unless already changed)
-            if ($artiest->getArtiest() === $this) {
-                $artiest->setArtiest(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, artiest>
-     */
-    public function getVoorprogramma(): Collection
+    public function getVoorprogramma(): ?Artiest
     {
         return $this->voorprogramma;
     }
 
-    public function addVoorprogramma(artiest $voorprogramma): self
+    public function setVoorprogramma(?Artiest $voorprogramma): self
     {
-        if (!$this->voorprogramma->contains($voorprogramma)) {
-            $this->voorprogramma->add($voorprogramma);
-            $voorprogramma->setVoorprogramma($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVoorprogramma(artiest $voorprogramma): self
-    {
-        if ($this->voorprogramma->removeElement($voorprogramma)) {
-            // set the owning side to null (unless already changed)
-            if ($voorprogramma->getVoorprogramma() === $this) {
-                $voorprogramma->setVoorprogramma(null);
-            }
-        }
+        $this->voorprogramma = $voorprogramma;
 
         return $this;
     }
