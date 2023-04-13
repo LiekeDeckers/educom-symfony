@@ -67,7 +67,11 @@ class OptredenRepository extends ServiceEntityRepository
 
     public function saveOptreden($params) {
 
-        $optreden = new Optreden();
+        if(isset($params["id"]) && $params["id"] != "") {
+            $optreden = $this->find($params["id"]);
+        } else {
+            $optreden = new Optreden();
+        }
         
         $optreden->setPodium($this->fetchPoppodium($params["poppodium_id"]));
         $optreden->setArtiest($this->fetchArtiest($params["hoofdprogramma_id"]));
@@ -87,6 +91,23 @@ class OptredenRepository extends ServiceEntityRepository
 
         return($optreden);
         
+    }
+
+    public function deleteOptreden($id) {
+    
+        $optreden = $this->find($id);
+        if($optreden) {
+            $this->_em->remove($optreden);
+            $this->_em->flush();
+            return(true);
+
+            // artiesten ook verwijderen
+            $this->artiestRepository->deleteArtiest($optreden->getArtiest()->getId());
+            $this->artiestRepository->deleteArtiest($optreden->getVoorprogramma()?->getId());
+            return(true);
+        }
+    
+        return(false);
     }
 
 
